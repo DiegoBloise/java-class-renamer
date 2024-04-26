@@ -1,5 +1,6 @@
 import os
 import fileinput
+import sys
 
 def replace_in_file(file_path, old_word, new_word):
     with fileinput.FileInput(file_path, inplace=True) as file:
@@ -34,8 +35,10 @@ def main():
     old_singular = input("Digite o nome antigo no singular: ")
     new_singular = input("Digite o novo nome no singular: ")
 
+    script_name = os.path.basename(sys.argv[0])
+
     for file_name in files:
-        if file_name.endswith('.java'):
+        if file_name.endswith('.java') and file_name != script_name:
             file_path = os.path.join(current_dir, file_name)
             replace_in_file(file_path, old_plural, new_plural)
             replace_in_file(file_path, old_singular, new_singular)
