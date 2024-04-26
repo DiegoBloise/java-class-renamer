@@ -24,9 +24,17 @@ def rename_file(old_name, new_name):
 
 def main():
     current_dir = os.getcwd()
-    files = os.listdir(current_dir)
+    files = [file for file in os.listdir(current_dir) if file.endswith('.java') and file != os.path.basename(sys.argv[0])]
 
-    proceed = input(f"Encontrados {len(files)} arquivos. Deseja prosseguir com a edição? (s/n): ")
+    if not files:
+        print("Nenhum arquivo Java encontrado na pasta atual.")
+        return
+
+    print(f"Encontrados os seguintes arquivos Java para processamento:")
+    for file_name in files:
+        print(f"- {file_name}")
+
+    proceed = input(f"Deseja prosseguir com a edição desses arquivos? (s/n): ")
     if proceed.lower() != 's':
         return
 
@@ -35,15 +43,12 @@ def main():
     old_singular = input("Digite o nome antigo no singular: ")
     new_singular = input("Digite o novo nome no singular: ")
 
-    script_name = os.path.basename(sys.argv[0])
-
     for file_name in files:
-        if file_name.endswith('.java') and file_name != script_name:
-            file_path = os.path.join(current_dir, file_name)
-            replace_in_file(file_path, old_plural, new_plural)
-            replace_in_file(file_path, old_singular, new_singular)
-            new_file_name = file_name.replace(old_plural, new_plural).replace(old_singular, new_singular)
-            rename_file(file_path, os.path.join(current_dir, new_file_name))
+        file_path = os.path.join(current_dir, file_name)
+        replace_in_file(file_path, old_plural, new_plural)
+        replace_in_file(file_path, old_singular, new_singular)
+        new_file_name = file_name.replace(old_plural, new_plural).replace(old_singular, new_singular)
+        rename_file(file_path, os.path.join(current_dir, new_file_name))
 
     print("Processo concluído!")
 
